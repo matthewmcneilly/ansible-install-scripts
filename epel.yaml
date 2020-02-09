@@ -1,0 +1,10 @@
+---
+- name: Install Repos
+  hosts: app
+  become: yes
+
+  tasks:
+  - name: Install EPEL Repo
+    yum:
+      name: epel-release
+      state: present

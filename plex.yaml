@@ -1,0 +1,19 @@
+---
+- name: Install Fresh Install Packages
+  hosts: app
+  become: true
+
+  tasks:
+  - name: Copy Plex Media Server Repo
+    copy:
+      src: plex.repo
+      dest: /etc/yum.repos.d/plex.repo
+      mode: '0644'
+
+  - name: Upgrade All Packages
+    yum: name=* state=latest
+
+  - name: Install Plex Media Server
+    yum:
+      name: plexmediaserver
+      state: present
