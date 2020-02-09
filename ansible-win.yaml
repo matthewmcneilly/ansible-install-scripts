@@ -1,0 +1,8 @@
+--
+-
+  name: "Windows Install"
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: "Install Brave"
+      win_package: "https://laptop-updates.brave.com/latest/winx64"
