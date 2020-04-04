@@ -1,8 +1,10 @@
---
--
-  name: "Windows Install"
+---
+- name: Install Repos
   hosts: localhost
   connection: local
+
   tasks:
-    - name: "Install Brave"
-      win_package: "https://laptop-updates.brave.com/latest/winx64"
+    - name: Install Brave Browser
+      win_package:
+        path: .\files\BraveBrowserSetup.exe
+        state: present
