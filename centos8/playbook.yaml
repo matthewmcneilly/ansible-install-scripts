@@ -44,25 +44,43 @@
   - name: Upgrade All Packages
     yum: name=* state=latest
 
-  - name: Download and Unarchive Simple Scan
-    unarchive:
-      src: https://launchpad.net/simple-scan/3.25/3.25.1/+download/simple-scan-3.25.1.tar.xz
-      dest: /tmp/
-      remote_src: yes
-
-  - name: Install Simple Scan Pre-Req
+  - name: Install Snap
     yum:
-      name:
-        - meson
-        - vala
-        - gettext
-        - itstool
-        - gtk3-devel
-        - libgusb-devel
-        - colord-devel
-        - PackageKit-glib-devel
-        - libwebp-devel
-        - sane-backends-devel
+      name: snapd
+      state: present
+
+  - name: Install Git
+    yum:
+      name: git
+      state: present
+
+  - name: Install Make
+    yum:
+      name: make
+      state: present
+
+  - name: Install KDEConnect
+    yum:
+      name: kdeconnectd
+      state: present
+
+  - name: Install K3B
+    yum:
+      name: k3b
+      state: present
+
+  - name: Copy Private Internet Access VPN installer
+    copy:
+      src: pia-linux-1.8-04193.run
+      dest: /tmp/pia-linux-1.8-04193.run
+
+  - name: Install PIA VPN
+    shell: sh /tmp/pia-linux-1.8-04193.run
+    become: false
+
+  - name: Install XSane
+    yum:
+      name: xsane
       state: present
 
   - name: Install Python3
@@ -272,11 +290,6 @@
   - name: Install Firefox
     yum:
       name: firefox
-      state: present
-
-  - name: Install Git
-    yum:
-      name: git
       state: present
 
   - name: Install Rhythmbox

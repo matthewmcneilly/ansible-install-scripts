@@ -1,0 +1,32 @@
+---
+- name: Setup Fresh Centos 8 Instal
+  hosts: app
+  become: yes
+
+  tasks:
+- name: Download and Unarchive Simple Scan
+  unarchive:
+    src: https://launchpad.net/simple-scan/3.25/3.25.1/+download/simple-scan-3.25.1.tar.xz
+    dest: /tmp/
+    remote_src: yes
+
+- name: Install Simple Scan Pre-Req
+  yum:
+    name:
+      - meson
+      - vala
+      - gettext
+      - itstool
+      - gtk3-devel
+      - libgusb-devel
+      - colord-devel
+      - PackageKit-glib-devel
+      - libwebp-devel
+      - sane-backends-devel
+    state: present
+
+- name: Install Simple Scan
+  shell: |
+    cd /tmp/simple-scan-3.25.1
+    meson --prefix $PWD/install build/
+    ninja -C build/ all install

@@ -1,0 +1,21 @@
+---
+- name: Setup Fresh Centos 8 Instal
+  hosts: app
+  become: yes
+
+  tasks:
+  - name: Install brasero-libs (prereq for Sound Juicer)
+    yum:
+      name: brasero-libs
+      state: present
+
+  - name: Download & Extract Sound Juicer Tarball
+    unarchive:
+      src: https://download.gnome.org/sources/sound-juicer/3.24/sound-juicer-3.24.0.tar.xz
+      dest: /tmp/
+      remote_src: yes
+
+  - name: Install Sound Juicer
+    shell: ./configure
+    args:
+      chdir: /tmp/sound-juicer-3.24.0
