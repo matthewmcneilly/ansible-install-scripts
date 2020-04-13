@@ -1,0 +1,184 @@
+---
+- name: Setup Fresh Debian 10 Install
+#  hosts: localhost
+#  connection: local
+  hosts: apps
+  become: yes
+
+  tasks:
+  - name: Install Atom
+    apt:
+      name: atom
+      state: present
+
+  - name: Install Brasero
+    apt:
+      name: brasero
+      state: present
+
+  - name: Install Brave browser
+    apt:
+      name: brave-browser
+      state: present
+
+  - name: Install Chrome
+    apt:
+      name: google-chrome-beta
+      state: present
+
+  - name: Install Chromium
+    apt:
+      name: chromium
+      state: present
+
+  - name: Install Folding@Home Client
+    apt:
+      deb: ./files/fahclient_7.5.1_amd64.deb
+
+  - name: Install Folding@Home Control
+    apt:
+      deb: ./files/fahcontrol_7.5.1-1_all.deb
+
+  - name: Install Filezilla
+    apt:
+      name: filezilla
+      state: present
+
+  - name: Install Firefox
+    apt:
+      name: firefox-esr
+      state: present
+
+  - name: Install Git
+    apt:
+      name: git
+      state: present
+
+  - name: Install Vim
+    apt:
+      name: vim
+      state: present
+
+  - name: Install GIMP
+    apt:
+      name: gimp
+      state: present
+
+  - name: Install Gparted
+    apt:
+      name: gparted
+      state: present
+
+  - name: Install Handbrake
+    apt:
+      name: handbrake
+      state: present
+
+  - name: Install HexChat
+    apt:
+      name: hexchat-common
+      state: present
+
+  - name: Install Htop
+    apt:
+      name: htop
+      state: present
+
+  - name: Install Thunderbird
+    apt:
+      name: thunderbird
+      state: present
+
+  - name: Install Inkscape
+    apt:
+      name: inkscape
+      state: present
+
+  - name: Install  K3B
+    apt:
+      name: k3b
+      state: present
+
+  - name: Install KeePassX
+    apt:
+      name: keepassx
+      state: present
+
+  - name: Install LibreOffice
+    apt:
+      name: libreoffice
+      state: present
+
+  - name: Install Virtualbox
+    apt:
+      name: virtualbox-6.0
+      state: present
+
+  - name: Install Plex Media Server
+    apt:
+      name: plexmediaserver
+      state: present
+
+  - name: Install Vagrant
+    apt:
+      name: vagrant
+      state: present
+
+  - name: Install OpenJDK
+    apt:
+      name: openjdk-8-jdk
+      state: present
+
+  - name: Install Rhythmbox
+    apt:
+      name: rhythmbox
+      state: present
+
+  - name: Install Simple Scan
+    apt:
+      name: simple-scan
+      state: present
+
+  - name: Install Sound Juicer
+    apt:
+      name: sound-juicer
+      state: present
+
+  - name: Install Teamviewer
+    apt:
+      name: teamviewer
+      state: present
+
+  - name: Install Transmission
+    apt:
+      name: transmission
+      state: present
+
+  - name: Install VLC
+    apt:
+      name: vlc
+      state: present
+
+  - name: Install Woeusb
+    apt:
+      name: woeusb
+      state: present
+
+  - name: Copy Private Internet Access VPN installer
+    copy:
+      src: ./files/pia-linux-1.8-04193.run
+      dest: /tmp/pia-linux-1.8-04193.run
+
+  - name: Install PIA VPN
+    shell: sh /tmp/pia-linux-1.8-04193.run
+    become: false
+
+  - name: Install Flatpak
+    apt:
+      name: flatpak
+      state: present
+
+#  - name: Install Spotify
+#    flatpak:
+#      name: com.spotify.Client
+#      state: present
