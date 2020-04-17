@@ -6,14 +6,59 @@
   become: yes
 
   tasks:
+  - name: Add VirtualBox GPG Key
+    apt_key:
+      url: https://www.virtualbox.org/download/oracle_vbox.asc
+      state: present
+
+  - name: Add VirtualBox GPG Key
+    apt_key:
+      url: https://www.virtualbox.org/download/oracle_vbox_2016.asc
+      state: present
+
+  - name: Add Brave GPG Key
+    apt_key:
+      url: https://brave-browser-apt-release.s3.brave.com/brave-core.asc
+      state: present
+
+  - name: Add VirtualBox Repo
+    apt_repository:
+      repo: deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian buster contrib
+      state: present
+
+  - name: Add Brave Repo
+    apt_repository:
+      repo: deb https://brave-browser-apt-release.s3.brave.com/ stable main
+      state: present
+
+  - name: Update all packages to the latest version
+    apt:
+      upgrade: dist
+
+  - name: Add Software Properties Common
+    apt:
+      name: software-properties-common
+      state: present
+
+  - name: Copy Atom
+    copy:
+      src: ./files/atom-amd64.deb
+      dest: /tmp/atom-amd64.deb
+
   - name: Install Atom
     apt:
-      name: atom
-      state: present
+      deb: /tmp/atom-amd64.deb
 
   - name: Install Brasero
     apt:
       name: brasero
+      state: present
+
+  - name: Install Brave Browser Pre-Reqs
+    apt:
+      name:
+        - apt-transport-https
+        - curl
       state: present
 
   - name: Install Brave browser
@@ -23,21 +68,30 @@
 
   - name: Install Chrome
     apt:
-      name: google-chrome-beta
-      state: present
+      deb: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 
   - name: Install Chromium
     apt:
       name: chromium
       state: present
 
+  - name: Copy Folding@Home Client
+    copy:
+      src: ./files/fahclient_7.5.1_amd64.deb
+      dest: /tmp/fahclient_7.5.1_amd64.deb
+
   - name: Install Folding@Home Client
     apt:
-      deb: ./files/fahclient_7.5.1_amd64.deb
+      deb: /tmp/fahclient_7.5.1_amd64.deb
+
+  - name: Copy Folding@Home Control
+    copy:
+      src: ./files/fahcontrol_7.5.1-1_all.deb
+      dest: /tmp/fahcontrol_7.5.1-1_all.deb
 
   - name: Install Folding@Home Control
     apt:
-      deb: ./files/fahcontrol_7.5.1-1_all.deb
+      deb: /tmp/fahcontrol_7.5.1-1_all.deb
 
   - name: Install Filezilla
     apt:
@@ -114,10 +168,21 @@
       name: virtualbox-6.0
       state: present
 
+  - name: Download VirtualBox Extension Pack
+    # sudo VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-6.0.10.vbox-extpack to install after running playbook
+    # required gui approval of terms
+    get_url:
+      url: https://download.virtualbox.org/virtualbox/6.0.10/Oracle_VM_VirtualBox_Extension_Pack-6.0.10.vbox-extpack
+      dest: /tmp/Oracle_VM_VirtualBox_Extension_Pack-6.0.10.vbox-extpack
+
+  - name: Copy Plex Media Server
+    copy:
+      src: ./files/plexmediaserver_1.19.1.2645-ccb6eb67e_amd64.deb
+      dest: /tmp/plexmediaserver_1.19.1.2645-ccb6eb67e_amd64.deb
+
   - name: Install Plex Media Server
     apt:
-      name: plexmediaserver
-      state: present
+      deb: /tmp/plexmediaserver_1.19.1.2645-ccb6eb67e_amd64.deb
 
   - name: Install Vagrant
     apt:
@@ -126,7 +191,7 @@
 
   - name: Install OpenJDK
     apt:
-      name: openjdk-8-jdk
+      name: openjdk-11-jre
       state: present
 
   - name: Install Rhythmbox
@@ -144,10 +209,14 @@
       name: sound-juicer
       state: present
 
+  - name: Download Teamviewer
+    get_url:
+      url: https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
+      dest: /tmp/teamviewer.deb
+
   - name: Install Teamviewer
     apt:
-      name: teamviewer
-      state: present
+      deb: /tmp/teamviewer.deb
 
   - name: Install Transmission
     apt:
@@ -157,11 +226,6 @@
   - name: Install VLC
     apt:
       name: vlc
-      state: present
-
-  - name: Install Woeusb
-    apt:
-      name: woeusb
       state: present
 
   - name: Copy Private Internet Access VPN installer
@@ -178,7 +242,37 @@
       name: flatpak
       state: present
 
-#  - name: Install Spotify
-#    flatpak:
-#      name: com.spotify.Client
-#      state: present
+  - name: Add the flathub flatpak repository remote to the user installation
+    flatpak_remote:
+      name: flathub
+      state: present
+      flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+
+  - name: Install Spotify
+    flatpak:
+      name: com.spotify.Client
+      state: present
+
+  - name: Install Nload
+    apt:
+      name: nload
+      state: present
+
+  - name: Install Psensor
+    apt:
+      name: psensor
+      state: present
+
+  # - name: Install
+  #   apt:
+  #     name:
+  #     state: present
+
+  # - name: Add Woeusb Repo (WebUpd8)
+  #   shell: add-apt-repository ppa:nilarimogard/webupd8
+  #
+  # - name: Install Woeusb
+  #   apt:
+  #     name: woeusb
+  #     state: present
+  # ppa wont install for debian systems, have to build from source
