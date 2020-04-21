@@ -1,6 +1,17 @@
+# To Run Playbook
+* These playbooks are designed with debian10 in mind and require testing
+
+## Pre-Req
+* Change hosts as required
+* Change variable in raid-config.yml playbook
+* Seperate out applications you are looking to install into seperate playbooks
+* Download and place installers into files directory and change variable names as appropriate
+## Run Playbook(s)
+ansible-playbook <new-playbook(s)> # for app installs
+ansible-playbook raid-config.yml # for setting up raid5 config
+
 # TODO
 * nvidia graphics driver
-* Create RAID configs
 
 # Problems
 * Woeusb - ppa provided by WebUp8 but only an option for ubuntu releases no debian, build from source a potential.
@@ -43,4 +54,7 @@
 34. PIA VPN
 35. Flatpak
 36. Spotify
-37. Psensor 
+37. Psensor
+
+# Configs
+1. Create RAID5 md0 config

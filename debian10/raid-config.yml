@@ -1,0 +1,57 @@
+---
+# assumes that storagearray md0 is already created previously
+# playbook purpose is for mounting array on a fresh system
+- name: Setup md0 mdadm RAID Config | Storagearray
+  hosts: localhost
+  connection: local
+  become: yes
+  vars:
+    home_dir: /home/matthew
+
+  tasks:
+  - name: Install mdadm
+    apt:
+      name: "mdadm"
+      state: "present"
+
+  - name: Mount Storage Array in /etc/fstab
+    mount:
+      path: /mnt/storagearray
+      src: /dev/md0
+      fstype: ext4
+      opts: defaults
+      state: mounted
+
+  - name: Capture Array Details
+    command: "mdadm --detail --scan"
+    register: "array_details"
+
+  - name: Check Captured Array Details
+    debug:
+      msg: "{{ array_details.stdout_lines }}"
+
+  - name: Ensure /etc/mdadm/mdadm.conf file exists
+    copy:
+      content: ""
+      dest: /etc/mdadm/mdadm.conf
+      force: no
+
+  - name: Updating /etc/mdadm/mdadm.conf
+    lineinfile:
+      dest: "/etc/mdadm/mdadm.conf"
+      regexp: "^{{ item }}"
+      line: "{{ item }}"
+      state: "present"
+    with_items: '{{ array_details.stdout_lines }}'
+
+  - name: Updating Initramfs
+    command: "update-initramfs -u"
+
+  # may not work for some distro's, check if dir ~/config/gtk-3.0 exists
+  - name: Updating Bookmark Config File
+    lineinfile:
+      dest: "{{ home_dir }}/.config/gtk-3.0/bookmarks"
+      regexp: "^{{ item }}"
+      line: "{{ item }}"
+      state: "present"
+    with_items: "file:///mnt/storagearray Storagearray"

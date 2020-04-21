@@ -1,7 +1,12 @@
 ---
 - name: Setup Fresh Centos 8 Instal
   hosts: app
+#  hosts: localhost
+#  connection: local
   become: yes
+  # Download the required rpm's into the files directory before kicking of playbook and change variable names as appropiate
+  vars:
+    pia_package: pia-linux-1.8-04193.run
 
   tasks:
   - name: Add EPEL Repo
@@ -71,11 +76,11 @@
 
   - name: Copy Private Internet Access VPN installer
     copy:
-      src: ./files/pia-linux-1.8-04193.run
-      dest: /tmp/pia-linux-1.8-04193.run
+      src: ./files/{{ pia_package }}
+      dest: /tmp/{{ pia_package }}
 
   - name: Install PIA VPN
-    shell: sh /tmp/pia-linux-1.8-04193.run
+    shell: sh /tmp/{{ pia_package }}
     become: false
 
   - name: Install XSane

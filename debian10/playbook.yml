@@ -4,6 +4,13 @@
 #  connection: local
   hosts: apps
   become: yes
+  # Download the required debian packages into the files directory before kicking of playbook and change variable names as appropiate
+  vars:
+    plexmediaserver_deb_package: plexmediaserver_1.19.1.2645-ccb6eb67e_amd64.deb
+    atom_deb_package: atom-amd64.deb
+    foldingathomeclient_deb_package: fahclient_7.5.1_amd64.deb
+    foldingathomecontrol_deb_package: fahcontrol_7.5.1-1_all.deb
+    pia_package: pia-linux-1.8-04193.run
 
   tasks:
   - name: Add VirtualBox GPG Key
@@ -42,12 +49,12 @@
 
   - name: Copy Atom
     copy:
-      src: ./files/atom-amd64.deb
-      dest: /tmp/atom-amd64.deb
+      src: ./files/{{ atom_deb_package }}
+      dest: /tmp/{{ atom_deb_package }}
 
   - name: Install Atom
     apt:
-      deb: /tmp/atom-amd64.deb
+      deb: /tmp/{{ atom_deb_package }}
 
   - name: Install Brasero
     apt:
@@ -77,21 +84,21 @@
 
   - name: Copy Folding@Home Client
     copy:
-      src: ./files/fahclient_7.5.1_amd64.deb
-      dest: /tmp/fahclient_7.5.1_amd64.deb
+      src: ./files/{{ foldingathomeclient_deb_package }}
+      dest: /tmp/{{ foldingathomeclient_deb_package }}
 
   - name: Install Folding@Home Client
     apt:
-      deb: /tmp/fahclient_7.5.1_amd64.deb
+      deb: /tmp/{{ foldingathomeclient_deb_package }}
 
   - name: Copy Folding@Home Control
     copy:
-      src: ./files/fahcontrol_7.5.1-1_all.deb
-      dest: /tmp/fahcontrol_7.5.1-1_all.deb
+      src: ./files/{{ foldingathomecontrol_deb_package }}
+      dest: /tmp/{{ foldingathomecontrol_deb_package }}
 
   - name: Install Folding@Home Control
     apt:
-      deb: /tmp/fahcontrol_7.5.1-1_all.deb
+      deb: /tmp/{{ foldingathomecontrol_deb_package }}
 
   - name: Install Filezilla
     apt:
@@ -177,12 +184,12 @@
 
   - name: Copy Plex Media Server
     copy:
-      src: ./files/plexmediaserver_1.19.1.2645-ccb6eb67e_amd64.deb
-      dest: /tmp/plexmediaserver_1.19.1.2645-ccb6eb67e_amd64.deb
+      src: ./files/{{ plexmediaserver_deb_package }}
+      dest: /tmp/{{ plexmediaserver_deb_package }}
 
   - name: Install Plex Media Server
     apt:
-      deb: /tmp/plexmediaserver_1.19.1.2645-ccb6eb67e_amd64.deb
+      deb: /tmp/{{ plexmediaserver_deb_package }}
 
   - name: Install Vagrant
     apt:
@@ -230,11 +237,11 @@
 
   - name: Copy Private Internet Access VPN installer
     copy:
-      src: ./files/pia-linux-1.8-04193.run
-      dest: /tmp/pia-linux-1.8-04193.run
+      src: ./files/{{ pia_package }}
+      dest: /tmp/{{ pia_deb_package }}
 
   - name: Install PIA VPN
-    shell: sh /tmp/pia-linux-1.8-04193.run
+    shell: sh /tmp/{{ pia_package }}
     become: false
 
   - name: Install Flatpak
